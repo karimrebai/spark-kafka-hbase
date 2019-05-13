@@ -14,7 +14,7 @@ import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 
 class KafkaDirectStream(streamingContext: StreamingContext,
                         kafkaParams: Map[String, Object], inputTopics: Array[String]) {
-  def getMessages: InputDStream[ConsumerRecord[String, String]] = {
+  def getStream: InputDStream[ConsumerRecord[String, String]] = {
     KafkaUtils.createDirectStream[String, String](
       streamingContext,
       PreferConsistent,

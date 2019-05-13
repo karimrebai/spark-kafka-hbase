@@ -10,13 +10,13 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 import scala.collection.JavaConversions._
 
-object Main {
+object SparkStreamingKafka {
 
   def main(args: Array[String]): Unit = {
     val conf = loadConfig()
     val streamingContext: StreamingContext = createStreamingContext(conf)
-    val messages = KafkaDirectStream(streamingContext, conf).getMessages
-    messages.foreachRDD(rdd => {
+    val stream = KafkaDirectStream(streamingContext, conf).getStream
+    stream.foreachRDD(rdd => {
       val offsetRanges = rdd.asInstanceOf[HasOffsetRanges].offsetRanges
       rdd.foreachPartition(part => {
         val ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(
@@ -39,7 +39,7 @@ object Main {
           }
         })
       })
-      messages.asInstanceOf[CanCommitOffsets].commitAsync(offsetRanges)
+      stream.asInstanceOf[CanCommitOffsets].commitAsync(offsetRanges)
     })
     streamingContext.start()
     streamingContext.awaitTermination()
