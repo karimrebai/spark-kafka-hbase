@@ -1,9 +1,10 @@
 package com.kr
 
-import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.client.{Connection, ConnectionFactory, Put, Table}
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.hbase.{HBaseConfiguration, TableName}
+
+case class Record(rowKey: String, columnFamily: String, qualifier: String, value: String)
 
 class HBaseRepository(connection: Connection, nameSpace: String) {
 
@@ -28,18 +29,7 @@ class HBaseRepository(connection: Connection, nameSpace: String) {
 
 object HBaseRepository {
   def apply(configuration: Map[String, String]): HBaseRepository = {
-    val hConnection: Connection = ConnectionFactory.createConnection(createHBaseConfig(configuration))
+    val hConnection: Connection = ConnectionFactory.createConnection(HBaseConfiguration.create())
     new HBaseRepository(hConnection, configuration("hbase.namespace"))
-  }
-
-  private def createHBaseConfig(configuration: Map[String, String]) = {
-    val hBaseConfiguration: Configuration = HBaseConfiguration.create()
-    hBaseConfiguration.addResource("core-site.xml")
-    hBaseConfiguration.addResource("hbase-site.xml")
-    hBaseConfiguration.set("hbase.rpc.controllerfactory.class", "org.apache.hadoop.hbase.ipc.RpcControllerFactory")
-    hBaseConfiguration.set("hbase.zookeeper.quorum", configuration("zookeeper.url"))
-    hBaseConfiguration.set("hbase.zookeeper.property.clientPort", configuration("zookeeper.clientPort"))
-    hBaseConfiguration.set("hadoop.security.authentication", "kerberos")
-    hBaseConfiguration
   }
 }
