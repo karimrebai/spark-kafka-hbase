@@ -7,7 +7,7 @@ This component stream messages from a kafka topic, save these into HBase and fin
 ![spark_streaming_kafka](https://user-images.githubusercontent.com/10392318/57933520-cfaec400-78bd-11e9-8a81-2e135bea1752.png)
 
 The component relies on 4 classes :
-* [SparkStreamingKafka](src/main/scala/com/kr/SparkStreamingKafka.scala) implements the main streaming algorithm and relies on the 3 classes below
+* [SparkStreamingKafka](src/main/scala/com/kr/SparkStreamingKafka.scala) implements the main streaming algorithm and depends on the 3 classes below
 * [KafkaDirectStream](src/main/scala/com/kr/KafkaDirectStream.scala) configures Kafka consumer and provides a method to stream input messages from input topic
 * [KafkaProducer](src/main/scala/com/kr/KafkaProducer.scala) configure Kafka producer and exposes a method to push messages to output topic
 * [HBaseRepository](src/main/scala/com/kr/HBaseRepository.scala) allows to open a connection to HBase and provides methods to put data into a given table
