@@ -22,7 +22,7 @@ $ mvn install
 
 #### Configuration
 
-The only file to configure is [config.properties](config.properties) where all the %PARAM% have to be replaced to target a specific cluster, keytab or namespace :
+The only file to configure is [config.properties](config.properties) where all the %PARAMS% have to be replaced to target specific kafka broker and topics, a keytab and a HBase namespace :
 
 ```properties
 kafka.brokers=%URL_1%:%PORT_1%,%URL_2%:%PORT_2%
@@ -39,6 +39,14 @@ hbase.namespace=%NAMESPACE%
 spark.micro.batch.duration=5
 ```
 
+#### HBase table
+
+The component will try to put data into a table "employee", created as follows :
+
+```sql
+create table "employee"("ID" VARCHAR, "info"."NAME" VARCHAR, CONSTRAINT pk PRIMARY KEY(ID));
+```
+
 ### Deployment
 
 ```bash
@@ -47,8 +55,4 @@ $ export KAFKA_OPTS="-Djava.security.auth.login.config=/etc/kafka/conf/kafka_cli
 $ /usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --new-consumer --bootstrap-server noeyy3pu.noe.edf.fr:9096,noeyycgd.noe.edf.fr:9096,noeyycge.noe.edf.fr:9096 --topic fr.edf.doaat.nsi.zb-metadata-from-nifi-json-dev-inspect-2 --security-protocol SASL_SSL --property security.protocol=SASL_SSL
 
 $ /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --broker-list noeyy3pu.noe.edf.fr:9096,noeyycgd.noe.edf.fr:9096,noeyycge.noe.edf.fr:9096 --topic fr.edf.doaat.nsi.zb-metadata-from-nifi-json-dev-inspect-1 --security-protocol SASL_SSL --property security.protocol=SASL_SSL
-```
-
-```sql
-create table "employee"("ID" VARCHAR, "info"."NAME" VARCHAR, CONSTRAINT pk PRIMARY KEY(ID));
 ```
