@@ -12,12 +12,6 @@ The component relies on 4 classes :
 * [KafkaProducer](src/main/scala/com/kr/KafkaProducer.scala) configure Kafka producer and exposes a method to push messages to output topic
 * [HBaseRepository](src/main/scala/com/kr/HBaseRepository.scala) allows to open a connection to HBase and provides methods to put data into a given table
 
-### Installation
-
-```bash
-$ mvn install
-```
-
 ### Prerequisites
 
 #### Configuration
@@ -39,6 +33,8 @@ hbase.namespace=%NAMESPACE%
 spark.micro.batch.duration=5
 ```
 
+The kerberos principal also has to be specified in [spark-submit shell script](spark-submit.sh).
+
 #### HBase table
 
 The component will try to put data into a table "employee", created as follows :
@@ -47,12 +43,29 @@ The component will try to put data into a table "employee", created as follows :
 create table "employee"("ID" VARCHAR, "info"."NAME" VARCHAR, CONSTRAINT pk PRIMARY KEY(ID));
 ```
 
-### Deployment
+### Installation and deployment
 
 ```bash
-$ export KAFKA_OPTS="-Djava.security.auth.login.config=/etc/kafka/conf/kafka_client_jaas.conf -Dsun.security.krb5.debug=true"
+$ mvn install
+```
+Then the spark job may be started with the provided [spark-submit shell script](spark-submit.sh) :
+```bash
+$ ./spark-submit.sh
+```
 
-$ /usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --new-consumer --bootstrap-server noeyy3pu.noe.edf.fr:9096,noeyycgd.noe.edf.fr:9096,noeyycge.noe.edf.fr:9096 --topic fr.edf.doaat.nsi.zb-metadata-from-nifi-json-dev-inspect-2 --security-protocol SASL_SSL --property security.protocol=SASL_SSL
+### Produce and consume data via Kafka
 
-$ /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --broker-list noeyy3pu.noe.edf.fr:9096,noeyycgd.noe.edf.fr:9096,noeyycge.noe.edf.fr:9096 --topic fr.edf.doaat.nsi.zb-metadata-from-nifi-json-dev-inspect-1 --security-protocol SASL_SSL --property security.protocol=SASL_SSL
+First of all, jaas configuration has to be provided :
+```bash
+$ export KAFKA_OPTS="-Djava.security.auth.login.config=/etc/kafka/conf/kafka_client_jaas.conf"
+```
+
+Then you can put data in the %INPUT_TOPIC% via this command :
+```bash
+$ /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --broker-list %URL_1%:%PORT_1%,%URL_2%:%PORT_2% --topic %INPUT_TOPIC% --security-protocol SASL_SSL --property security.protocol=SASL_SSL
+```
+
+If the job is working well, you should see the same data in the %OUTPUT_TOPIC% :
+```bash
+$ /usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --new-consumer --bootstrap-server %URL_1%:%PORT_1%,%URL_2%:%PORT_2% --topic %OUTPUT_TOPIC% --security-protocol SASL_SSL --property security.protocol=SASL_SSL
 ```
