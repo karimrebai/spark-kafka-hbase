@@ -3,7 +3,7 @@
 export SPARK_MAJOR_VERSION=2
 
 # Config files
-keytab=doaat_app_nifi_dev.keytab
+keytab=%PRINCIPAL%.keytab
 log4jConf=log4j.properties
 hbaseSite=/etc/hbase/conf/hbase-site.xml
 config=config.properties
