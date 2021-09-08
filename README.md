@@ -65,7 +65,7 @@ Then you can put data in the %INPUT_TOPIC% via this command :
 $ /usr/hdp/current/kafka-broker/bin/kafka-console-producer.sh --broker-list %URL_1%:%PORT_1%,%URL_2%:%PORT_2% --topic %INPUT_TOPIC% --security-protocol SASL_SSL --property security.protocol=SASL_SSL
 ```
 
-If the job is working well, you should see the same data in the %OUTPUT_TOPIC% :
+If the job is working well, you should the event in the %OUTPUT_TOPIC% with the following command :
 ```bash
 $ /usr/hdp/current/kafka-broker/bin/kafka-console-consumer.sh --new-consumer --bootstrap-server %URL_1%:%PORT_1%,%URL_2%:%PORT_2% --topic %OUTPUT_TOPIC% --security-protocol SASL_SSL --property security.protocol=SASL_SSL
 ```
